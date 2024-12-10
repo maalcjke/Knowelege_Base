@@ -1,36 +1,58 @@
+import { Prisma } from "@prisma/client";
 import { Article } from "../common/dto/article.dto.js";
 import prisma from "../database/database.module.js";
 
 export class ArticleService {
     constructor(public articleRepository = prisma.articles) {}
     
-    findAll(tagFilters: string[] = []) {
-        const articles = this.articleRepository.findMany({
-            where: tagFilters && tagFilters.length > 0
-                ? {
-                      tags: {
-                          some: {
-                              name: {
-                                  in: tagFilters,
-                              },
-                          },
-                      },
-                  }
-                : undefined,
+    async findAll(tagFilters: string[] = [], auth: boolean) {
+        // const articles = this.articleRepository.findMany({
+        //     where: tagFilters && tagFilters.length > 0
+        //         ? {
+        //               tags: {
+        //                   some: {
+        //                       name: {
+        //                           in: tagFilters,
+        //                       },
+        //                   },
+        //               },
+        //           }
+        //         : undefined,
+        //     include: {
+        //         tags: true,
+        //     },
+        // });
+
+
+        let where: Prisma.ArticlesWhereInput = {};
+
+        if(!auth) {
+            console.log(auth)
+            where.published = true;
+        }
+
+        if (tagFilters.length > 0) {
+            where.tags = {
+                some: {
+                    name: {
+                        in: tagFilters,
+                    },
+                },
+            };
+        }
+
+        const articles = await this.articleRepository.findMany({
+            where,
             include: {
                 tags: true,
             },
         });
+
         return articles;
     }
 
-    findOne(id: number) {
-        return this.articleRepository.findFirst({ where: { id }, include: { tags: true } });
-    }
-
-    filterArticles(req: any, res: any) {
-        console.log(req.query);
-        res.send('Filter articles');
+    findOne(id: number, auth: boolean) {
+        return this.articleRepository.findFirst({ where: { id: id, published: !auth }, include: { tags: true } });
     }
 
     createArticle(article: Article) {

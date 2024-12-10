@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 import { IRoute } from './common/interfaces/route.interface.js';
 import { ExceptionMiddleware } from './middleware/exception.middleware.js';
-import { Validate } from './middleware/validator.middleware.js';
 
 export class WebServer {
     private static app: any = null;
