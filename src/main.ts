@@ -1,5 +1,4 @@
-import express from 'express';
-import { ArticleController } from './article/article.controller.js';
+import { ArticleController } from './articles/article.controller.js';
 import { WebServer } from './server.js';
 
 async function boot() {
