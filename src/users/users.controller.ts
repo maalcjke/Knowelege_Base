@@ -16,7 +16,7 @@ export class UserController implements IController {
         const userService = new UserService();
 
         // Создание нового пользователя
-        router.post('/create', userValidationChain, async (req: Request, res: any) => {
+        router.post('/', userValidationChain, async (req: Request, res: any) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
