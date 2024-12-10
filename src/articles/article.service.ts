@@ -6,30 +6,9 @@ export class ArticleService {
     constructor(public articleRepository = prisma.articles) {}
     
     async findAll(tagFilters: string[] = [], auth: boolean) {
-        // const articles = this.articleRepository.findMany({
-        //     where: tagFilters && tagFilters.length > 0
-        //         ? {
-        //               tags: {
-        //                   some: {
-        //                       name: {
-        //                           in: tagFilters,
-        //                       },
-        //                   },
-        //               },
-        //           }
-        //         : undefined,
-        //     include: {
-        //         tags: true,
-        //     },
-        // });
-
-
         let where: Prisma.ArticlesWhereInput = {};
 
-        if(!auth) {
-            console.log(auth)
-            where.published = true;
-        }
+        if(!auth) where.published = true;
 
         if (tagFilters.length > 0) {
             where.tags = {

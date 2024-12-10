@@ -1,7 +1,10 @@
-import { UserDto } from "../articles/dto/user.dto.js";
-import prisma from "../database/database.module.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+
+import prisma from "../database/database.module.js";
+import { Config } from '../config/config.js';
+
+import { UserDto } from "../common/dto/user.dto.js";
 
 export class UserService {
     constructor(public userRepository = prisma.user) {}
@@ -31,8 +34,8 @@ export class UserService {
         const isMatch = bcrypt.compareSync(user.password, userExists.password);
         if(!isMatch) return { error: 'Invalid password' };
 
-        const token = jwt.sign({ id: userExists.id?.toString(), email: userExists.email }, "ENV_SECRET", {
-            expiresIn: '2 days',
+        const token = jwt.sign({ id: userExists.id?.toString(), email: userExists.email }, Config.get<string>('JWT_SECRET'), {
+            expiresIn: Config.get<string>('JWT_EXPIRES_IN'),
         });
      
         return { user: { id: userExists.id, email: userExists.email }, token: token }; 

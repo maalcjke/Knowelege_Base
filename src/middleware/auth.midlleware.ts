@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { IMiddleware } from "../common/interfaces/middleware.interface.js";
 import jwt from 'jsonwebtoken';
+import { Config } from "../config/config.js";
 
  export class Auth implements IMiddleware {
-    public middleware(req: Request, res: Response, next: NextFunction): void {
+    public async middleware(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const token = req.header('Authorization')?.replace('Bearer ', '');
             
@@ -11,11 +12,12 @@ import jwt from 'jsonwebtoken';
                 throw new Error();
             }
             
-            const decoded = jwt.verify(token, "ENV_SECRET");
-            
+            const decoded = jwt.verify(token, Config.get<string>('JWT_SECRET'));
+            if(!decoded) throw new Error();
+
             next();
         } catch (err) {
-            res.status(401).send('Please authenticate');
+            return res.status(401).send(err);
         }
     }
 }

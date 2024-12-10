@@ -6,10 +6,9 @@ import { IController } from "../common/interfaces/controller.interface.js";
 import { UserService } from "./users.service.js";
 
 import { param, validationResult  } from "express-validator";
-import { articleValidationChain } from "../common/validators/article.create.validation.js";
+import { userValidationChain } from "../common/validators/user.create.validation.js";
 
 import { Auth } from "../middleware/auth.midlleware.js";
-import { userValidationChain } from "../common/validators/user.create.validation.js";
 
 export class UserController implements IController {
     init(): IRoute {

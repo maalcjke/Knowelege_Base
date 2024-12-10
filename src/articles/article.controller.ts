@@ -21,14 +21,17 @@ export class ArticleController implements IController {
             const tagsParam = req.query.tags as string | undefined;
             const tags = tagsParam ? tagsParam.split(',').map(tag => tag.trim()) : [];
             const authenticate = await this.checkInMomentAuth(req, res); //Костыль
-            
+
             if(tags.length > 0) {
                 const articles = await articleService.findAll(tags, authenticate);
                 return res.send(articles);
             }
 
             const articles = await articleService.findAll([], authenticate);
-            res.send(articles);
+            
+            try {
+                res.send(articles);
+            } catch (err) { console.log('Invalid token') }
         })
 
         // Конкретная статья
@@ -37,9 +40,13 @@ export class ArticleController implements IController {
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
             
             const authenticate = await this.checkInMomentAuth(req, res); //Костыль
-            
+
             const article = await articleService.findOne(Number(req.params.id), authenticate);
-            res.send(article);
+            
+            try {
+                res.send(article);
+            } catch (err) { console.log('Invalid token') }
+
         })
         
         router.use(new Auth().middleware)
