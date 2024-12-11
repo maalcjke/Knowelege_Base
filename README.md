@@ -54,7 +54,7 @@ docker pull ghcr.io/maalcjke/knowelege_base/knowelegebase:latest
    [http://localhost:3000](http://localhost:3000)
 
 ### Endpoint'ы
-## Article
+## Articles
 - GET: [http://localhost:3000/api/articles/](http://localhost:3000/api/articles/)<br />
   return: All articles (в зависмости от авторизации)
 - GET: [http://localhost:3000/api/articles/:id](http://localhost:3000/api/articles/1)<br />
