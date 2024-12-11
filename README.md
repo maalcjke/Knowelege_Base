@@ -51,7 +51,7 @@ docker pull ghcr.io/maalcjke/knowelege_base/knowelegebase:latest
 
 4. **Откройте приложение в браузере**  
    После успешного запуска приложение будет доступно по адресу:  
-   [http://localhost:3000](http://localhost:3000)
+   [http://localhost:3000/api](http://localhost:3000/api)
 
 ### Endpoint'ы (без swagger)
 ## Articles
