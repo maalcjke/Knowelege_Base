@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { IMiddleware } from "../common/interfaces/middleware.interface.js";
 import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+
+import { IMiddleware } from "../common/interfaces/middleware.interface.js";
 import { Config } from "../config/config.js";
 
  export class Auth implements IMiddleware {
