@@ -53,7 +53,7 @@ docker pull ghcr.io/maalcjke/knowelege_base/knowelegebase:latest
    После успешного запуска приложение будет доступно по адресу:  
    [http://localhost:3000](http://localhost:3000)
 
-### Endpoint'ы
+### Endpoint'ы (без swagger)
 ## Articles
 - GET: [http://localhost:3000/api/articles/](http://localhost:3000/api/articles/)<br />
   return: All articles (в зависмости от авторизации)
