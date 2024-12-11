@@ -1,4 +1,4 @@
-## **Стек: Express.js (TypeScript, Prisma), PostgreSQL, Docker**
+## **Стек: Express.js, TypeScript, Prisma, PostgreSQL, Docker**
 
 ### 🐳 Готовый образ Knowledge Base + PostgreSQL  
 
