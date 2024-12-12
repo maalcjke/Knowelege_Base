@@ -48,29 +48,10 @@ export class ArticleService {
         });
     }
 
-    updateArticle(article: Partial<Article> & { id: string }) {
-        const updateData: any = {};
-    
-        if (article.title) {
-            updateData.title = article.title;
-        }
-    
-        if (article.content) {
-            updateData.content = article.content;
-        }
-    
-        if (article.tags && article.tags.length > 0) {
-            updateData.tags = {
-                connectOrCreate: article.tags.map((tag: string) => ({
-                    where: { name: tag },
-                    create: { name: tag }
-                }))
-            };
-        }
-    
+    updateArticle(id: number, article: Article) {
         return this.articleRepository.update({
-            where: { id: article.id },
-            data: updateData,
+            where: { id },
+            data: article,
         })
         .catch(() => {
             return {error: 'Article not found'}

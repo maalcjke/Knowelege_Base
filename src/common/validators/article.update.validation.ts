@@ -1,7 +1,7 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const articleUpdateValidationChain = [
-  body("id")
+  param("id")
     .exists({ checkFalsy: true })
     .withMessage("Id is required")
     .isInt()

@@ -16,40 +16,37 @@ export class ArticleController implements IController {
         const router = Router()
         const articleService = new ArticleService();
 
+        router.use(new Auth().middleware);
+
         // Все статьи
         router.get('/', async (req: Request, res: any) => {
             const tagsParam = req.query.tags as string | undefined;
             const tags = tagsParam ? tagsParam.split(',').map(tag => tag.trim()) : [];
-            const authenticate = await this.checkInMomentAuth(req, res); //Костыль
 
             if(tags.length > 0) {
-                const articles = await articleService.findAll(tags, authenticate);
+                const articles = await articleService.findAll(tags, res.locals.isAuthenticated);
                 return res.send(articles);
             }
 
-            const articles = await articleService.findAll([], authenticate);
-            
-            try {
-                res.send(articles);
-            } catch (err) { console.log('Invalid token') }
-        })
+            const articles = await articleService.findAll([], res.locals.isAuthenticated);
+            res.send(articles);
+        });
 
         // Конкретная статья
         router.get('/:id', param('id').isInt(), async (req: Request, res: any) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-            
-            const authenticate = await this.checkInMomentAuth(req, res); //Костыль
 
-            const article = await articleService.findOne(Number(req.params.id), authenticate);
-            
-            try {
-                res.send(article);
-            } catch (err) { console.log('Invalid token') }
+            const article = await articleService.findOne(Number(req.params.id), res.locals.isAuthenticated);
+            res.send(article);
+        });
 
-        })
-        
-        router.use(new Auth().middleware)
+        router.use((req: Request, res: any, next: NextFunction) => {
+            if (!res.locals.isAuthenticated) {
+                return res.status(401).json({ error: 'Authentication required' });
+            }
+            next();
+        });
 
         // Создание новой статьи
         router.post('/', articleValidationChain, async (req: Request, res: any) => {
@@ -65,7 +62,7 @@ export class ArticleController implements IController {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-            const article = await articleService.updateArticle(req.body);
+            const article = await articleService.updateArticle(Number(req.params.id), req.body);
             res.send(article);
         })
         
@@ -76,23 +73,8 @@ export class ArticleController implements IController {
 
             const article = await articleService.deleteArticle(Number(req.params.id));
             res.send(article);
-        })
+        });
 
         return { path: '/articles', router }
-    }
-
-    //Костыль, в дальнейшем нужно будет использовать декоратор
-    private async checkInMomentAuth(req: Request, res: Response): Promise<boolean> {
-        let isAuthorized = false;
-        if (req.headers.authorization) {
-            try {
-                await new Auth().middleware(req, res, () => {});
-                isAuthorized = true;
-            } catch (err) {
-                isAuthorized = false;
-            }
-        }
-
-        return isAuthorized;
     }
 }

@@ -4,21 +4,22 @@ import { Request, Response, NextFunction } from "express";
 import { IMiddleware } from "../common/interfaces/middleware.interface.js";
 import { Config } from "../config/config.js";
 
- export class Auth implements IMiddleware {
+export class Auth implements IMiddleware {
     public async middleware(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const token = req.header('Authorization')?.replace('Bearer ', '');
-            
+
             if (!token) {
-                throw new Error();
+                res.locals.isAuthenticated = false;
+                return next();
             }
             
             const decoded = jwt.verify(token, Config.get<string>('JWT_SECRET'));
-            if(!decoded) throw new Error();
-
-            next();
+            res.locals.isAuthenticated = !!decoded;
+            
         } catch (err) {
-            return res.status(401).send(err);
+            res.locals.isAuthenticated = false;
         }
+        next();
     }
 }
