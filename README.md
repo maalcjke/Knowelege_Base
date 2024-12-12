@@ -10,8 +10,8 @@ docker pull ghcr.io/maalcjke/knowelege_base/knowelegebase:latest
 ### 📋 Что необходимо для установки  
 
 Перед началом работы убедитесь, что на вашем компьютере установлены следующие инструменты:
-| **[➡️ Скачать Git](https://git-scm.com/downloads)** | **[➡️ Скачать Docker](https://www.docker.com/products/docker-desktop)** |
-|----------------------------------------------------|------------------------------------------------------------------------|
+| **[➡️ Скачать Git](https://git-scm.com/downloads)** | **[➡️ Скачать Docker](https://www.docker.com/products/docker-desktop)** | **[➡️ Скачать Postman](https://www.postman.com/downloads/)** |
+|----------------------------------------------------|------------------------------------------------------------------------| --------------------------------------------------------------|
 
 ---
 
@@ -54,22 +54,5 @@ docker pull ghcr.io/maalcjke/knowelege_base/knowelegebase:latest
    [http://localhost:3000/api](http://localhost:3000/api)
 
 ### Endpoint'ы (без swagger)
-## Articles
-- GET: [http://localhost:3000/api/articles/](http://localhost:3000/api/articles/)<br />
-  return: All articles (в зависмости от авторизации)
-- GET: [http://localhost:3000/api/articles/:id](http://localhost:3000/api/articles/1)<br />
-  return: One article (в зависмости от авторизации)
-- POST: [http://localhost:3000/api/articles/](http://localhost:3000/api/articles/)<br />
-  return: Create article (только авторизрованным)
-- PUT: [http://localhost:3000/api/articles/:id](http://localhost:3000/api/articles/1)<br />
-  return: Update article (только авторизрованным)
-- DELETE: [http://localhost:3000/api/articles/](http://localhost:3000/api/articles/)<br />
-  return: Delete article (только авторизрованным)
-## Users
-- POST: [http://localhost:3000/api/users/](http://localhost:3000/api/users/)<br />
-  return: Create user (без авторизации)
-- POST: [http://localhost:3000/api/users/login](http://localhost:3000/api/users/login)<br />
-  return: Login in user account (без авторизации)
-- DELETE: [http://localhost:3000/api/users/:id](http://localhost:3000/api/users/1)<br />
-  return: Delete user account (только авторизрованным)
+- Готовый конфиг PostMAN: [Knowledge.postman_collection.json](https://github.com/maalcjke/Knowelege_Base/blob/master/Knowledge.postman_collection.json)
 
