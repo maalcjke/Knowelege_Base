@@ -54,7 +54,6 @@ export class ArticleController implements IController {
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
             const article = await articleService.createArticle(req.body);
-            console.log(article)
             res.send(article);
         })
         

@@ -45,8 +45,7 @@ export class ArticleService {
             },
         }})
         .then((article: any) => article)
-        .catch((error: Error) => {
-            console.log(error)
+        .catch(() => {
             return { error: "Article not created" }
         });
     }
