@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { Article } from "../common/dto/article.dto.js";
 import prisma from "../database/database.module.js";
 
@@ -6,22 +5,20 @@ export class ArticleService {
     constructor(public articleRepository = prisma.articles) {}
     
     async findAll(tagFilters: string[] = [], auth: boolean) {
-        let where: Prisma.ArticlesWhereInput = {};
-
-        if(!auth) where.published = true;
-
-        if (tagFilters.length > 0) {
-            where.tags = {
-                some: {
-                    name: {
-                        in: tagFilters,
-                    },
+        const tag = {
+            some: {
+                name: {
+                    in: tagFilters,
                 },
-            };
+            },
         }
 
         const articles = await this.articleRepository.findMany({
-            where,
+            where: {
+                ...(auth ? {} : { published: true }),
+                ...(tagFilters.length === 0 ? {} : { tags: tag }),
+
+            },
             include: {
                 tags: true,
             },
@@ -31,37 +28,48 @@ export class ArticleService {
     }
 
     findOne(id: number, auth: boolean) {
-        return this.articleRepository.findFirst({ where: { id: id, published: !auth }, include: { tags: true } });
+        return this.articleRepository.findFirst({ 
+            where: { id, ...(auth ? {} : { published: true }) }, 
+            include: { tags: true } 
+        });
     }
 
     createArticle(article: Article) {
         return this.articleRepository.create({ data: {
-            title: article.title,
-            content: article.content,
+            ...article,
             tags: {
-                connectOrCreate: article.tags.map((tag: string) => ({ where: { name: tag }, create: { name: tag } }))
-            }
-        } })
+                connectOrCreate: article.tags.map((tag) => ({ 
+                    where: { name: tag }, 
+                    create: { name: tag } 
+                })),
+            },
+        }})
         .then((article: any) => article)
-        .catch(() => {
-            return {error: 'Unable to create article'}
+        .catch((error: Error) => {
+            console.log(error)
+            return { error: "Article not created" }
         });
     }
 
-    updateArticle(id: number, article: Article) {
-        const { tags, ...articleData } = article;
+    updateArticle(id: number, article: Article) {        
         return this.articleRepository.update({
             where: { id },
             data: {
-                ...articleData,
+                ...article,
                 tags: {
-                    set: tags.map(tag => ({ name: tag }))
+                    connectOrCreate: article.tags.map((tag) => ({ 
+                        where: { name: tag }, 
+                        create: { name: tag } 
+                    })),
                 }
             },
+            include: {
+                tags: true,
+            }
         })
         .catch(() => {
             return {error: 'Article not found'}
-        });
+        });;
     }
 
     deleteArticle(id: number) {
