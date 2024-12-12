@@ -2,7 +2,7 @@ export interface Article {
     title: string;
     content: string;
     tags: string[];
-    publish: boolean;
+    published: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

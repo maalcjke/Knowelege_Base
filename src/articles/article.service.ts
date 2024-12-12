@@ -42,20 +42,26 @@ export class ArticleService {
                 connectOrCreate: article.tags.map((tag: string) => ({ where: { name: tag }, create: { name: tag } }))
             }
         } })
-        .then((article) => article)
+        .then((article: any) => article)
         .catch(() => {
             return {error: 'Unable to create article'}
         });
     }
 
     updateArticle(id: number, article: Article) {
+        const { tags, ...articleData } = article;
         return this.articleRepository.update({
             where: { id },
-            data: article,
+            data: {
+                ...articleData,
+                tags: {
+                    set: tags.map(tag => ({ name: tag }))
+                }
+            },
         })
         .catch(() => {
             return {error: 'Article not found'}
-        });;
+        });
     }
 
     deleteArticle(id: number) {
